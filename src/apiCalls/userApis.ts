@@ -1,6 +1,7 @@
 import axios from "axios";
 import { baseUrl, unexpectedError } from "../utils/constants";
 import { toast } from "react-toastify";
+const token = localStorage.getItem("token");
 
 type userSignUpParams = {
   name: string;
@@ -55,6 +56,31 @@ export async function userLogin(
     console.log("data ", data.data);
     console.log("status", status);
     toast("logged in successfully");
+    return Promise.resolve(data);
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log("error message: ", error.response?.data.error);
+      toast(error.response?.data.error);
+      return Promise.reject(error.response?.data.error);
+    } else {
+      return Promise.reject(unexpectedError);
+    }
+  }
+}
+
+type getAllUsersResp = {
+  data: { _id: string; name: string; email: string }[];
+};
+
+export async function getAllUsers(): Promise<getAllUsersResp> {
+  const url = baseUrl + "/user";
+  try {
+    const { data, status } = await axios.get<getAllUsersResp>(url, {
+      headers: { Authorization: token },
+    });
+
+    console.log("data ", data.data);
+    console.log("status", status);
     return Promise.resolve(data);
   } catch (error) {
     if (axios.isAxiosError(error)) {
