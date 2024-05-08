@@ -1,9 +1,8 @@
-import { Request, Response } from "express";
-import userModel from "../models/userModel";
-import jwt from "jsonwebtoken";
-import { secretKey } from "../utils/constants";
+const userModel = require("../models/userModel");
+const jwt = require("jsonwebtoken");
+const { secretKey } = require("../utils/constants");
 
-export async function signUp(req: Request, res: Response) {
+async function signUp(req, res) {
   try {
     const { email, password, name } = req.body;
     const userDoc = await userModel.findOne({ email: email });
@@ -20,8 +19,9 @@ export async function signUp(req: Request, res: Response) {
     return res.json({ error: "internal error" });
   }
 }
+exports.signUp = signUp;
 
-export async function login(req: Request, res: Response) {
+async function login(req, res) {
   try {
     const { email, password } = req.body;
 
@@ -43,3 +43,16 @@ export async function login(req: Request, res: Response) {
     return res.json({ error: "internal error" });
   }
 }
+exports.login = login;
+
+async function getAllUsers(req, res) {
+  try {
+    console.log(req.user);
+    const allusers = await userModel.find({}, { name: 1, email: 1 });
+
+    return res.json({ data: allusers });
+  } catch (err) {
+    return res.status(500).json({ error: "internal error" });
+  }
+}
+exports.getAllUsers = getAllUsers;
