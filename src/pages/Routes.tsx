@@ -19,7 +19,7 @@ function AllRoutes(props: AllRoutesProps) {
   return (
     <div>
       {!props.isLoggedIn ? (
-        <AuthRoutes />
+        <AuthRoutes setIsLoggedIn={props.setIsLoggedIn} />
       ) : (
         <Routes>
           <Route path="/" element={<HomePage />} />
@@ -33,13 +33,21 @@ function AllRoutes(props: AllRoutesProps) {
   );
 }
 
-function AuthRoutes() {
+function AuthRoutes(props: {
+  setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
+}) {
   return (
     <>
       <Routes>
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/" element={<Login />} />
+        <Route
+          path="/login"
+          element={<Login setIsLoggedIn={props.setIsLoggedIn} />}
+        />
+        <Route
+          path="/"
+          element={<Login setIsLoggedIn={props.setIsLoggedIn} />}
+        />
       </Routes>
     </>
   );

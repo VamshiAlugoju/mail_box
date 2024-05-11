@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, Dispatch, SetStateAction } from "react";
 import { Box, Card, Flex, Text, TextField, Button } from "@radix-ui/themes";
 import { useNavigate } from "react-router-dom";
 import { userLogin } from "../apiCalls/userApis";
 import { toast } from "react-toastify";
 
-function Login() {
+function Login(props: { setIsLoggedIn: Dispatch<SetStateAction<boolean>> }) {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const naviagate = useNavigate();
@@ -18,6 +18,7 @@ function Login() {
         });
         localStorage.setItem("email", data.data.email);
         localStorage.setItem("token", data.data.token);
+        props.setIsLoggedIn(true);
         naviagate("/home");
       } catch (err) {
         console.log(err);

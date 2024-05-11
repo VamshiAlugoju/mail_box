@@ -1,8 +1,29 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Flex, Text } from "@radix-ui/themes";
 import Navbar from "../components/Navbar";
 import Msgbox from "../components/ui/Msgbox";
+import { getMails } from "../apiCalls/mailApis";
 function Inbox() {
+  const [messages, setMessages] = useState<
+    { name: string; email: string; _id: string; mailData: string }[]
+  >([]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const data = await getMails();
+        console.log(data);
+        setMessages(data);
+      } catch (err) {
+        console.log(err);
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    console.log(messages);
+  }, [messages]);
+
   return (
     <Box>
       <Navbar />
@@ -14,20 +35,17 @@ function Inbox() {
           align="center"
           gap="2"
         >
-          <Msgbox
-            key="1"
-            name="vamshi"
-            email="vamsh@gmail.com"
-            id="3"
-            data="loremfjj fpsodj fpo cij f eff fsd;k ;c 'sdkc 'k 'v ks ;bv j;a fj dsfk sodf jpcksdp ojwpf kpwef kcs ;fksd; f c spdkfs;f jte  j a;jte lj the sea l vel all ov erht eopwor is tahakne to be rorsl spojp ofjjf;sfjs csldfjslfjspfjsapfosp spcj slfsf l fj dfjsfksj;f pofj pofepo fjpwfjp ofwpefj pw fspfjd"
-          />
-          <Msgbox
-            key="1"
-            name="vamshi"
-            email="vamsh@gmail.com"
-            id="3"
-            data="loremfjj fpsodj fpo cij f eff fsd;k ;c 'sdkc 'k 'v ks ;bv j;a fj dsfk sodf jpcksdp ojwpf kpwef kcs ;fksd; f c spdkfs;f jte  j a;jte lj the sea l vel all ov erht eopwor is tahakne to be rorsl spojp ofjjf;sfjs csldfjslfjspfjsapfosp spcj slfsf l fj dfjsfksj;f pofj pofepo fjpwfjp ofwpefj pw fspfjd"
-          />
+          {messages.map((message) => {
+            return (
+              <Msgbox
+                key={message._id}
+                name={message.name}
+                email={message.email}
+                id={message._id}
+                data={message.mailData}
+              />
+            );
+          })}
         </Flex>
       </Box>
     </Box>
