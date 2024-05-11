@@ -3,8 +3,14 @@ const { Schema, model } = require("mongoose");
 const userSchema = new Schema(
   {
     mailData: String,
-    sender: String,
-    reciver: String,
+    sender: {
+      type: Schema.Types.ObjectId,
+      ref: "user",
+    },
+    reciver: {
+      type: Schema.Types.ObjectId,
+      ref: "user",
+    },
   },
   { timestamps: true }
 );
